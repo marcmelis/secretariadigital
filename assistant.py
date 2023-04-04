@@ -39,7 +39,6 @@ else:
 
 openai.api_key = API_KEY
 
-COMPLETIONS_MODEL = "text-davinci-003"
 COMPLETIONS_MODEL = "gpt-3.5-turbo"
 
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'

@@ -8,11 +8,9 @@ from config import API_KEY
 
 openai.api_key = API_KEY
 
-#MODEL_NAME = "curie"
-#DOC_EMBEDDINGS_MODEL = f"text-search-{MODEL_NAME}-doc-001"
-#QUERY_EMBEDDINGS_MODEL = f"text-search-{MODEL_NAME}-query-001"
 MODEL_NAME= "ada-002"
-DOC_EMBEDDINGS_MODEL="text-embedding-ada-002"
+DOC_EMBEDDINGS_MODEL=f"text-embedding-{MODEL_NAME}"
+# In this case, with ada-002 we don't distinguish between query embeddings and document embeddings
 QUERY_EMBEDDINGS_MODEL = DOC_EMBEDDINGS_MODEL
 EMBEDDINGS_CSV=f"data/embeddings_{MODEL_NAME}.csv"
 
