@@ -9,12 +9,16 @@ import openai
 import pandas as pd
 from transformers import GPT2TokenizerFast
 import speech_recognition as sr
+import pyttsx3
 
+from translator import translate, detect_language
 from data import get_text, list_to_dataframe
 from generate_embeddings import get_query_embedding
 
 CONFIG_FILE = 'config.py'
 EMBEDDINGS_FILE ='data/embeddings_ada-002.csv'
+
+DEFAULT_LANGUAGE = 'en'
 
 # Check if config file exists
 if os.path.exists(CONFIG_FILE):
@@ -142,30 +146,52 @@ def answer_query_with_context(
 
     return response["choices"][0]["message"]["content"].strip(" \n")
 
+def speak(text: str):
+    language = detect_language(text)
+    engine = pyttsx3.init()
+    voices = engine.getProperty('voices')
+    for voice in voices:
+        if language in voice.languages:
+            engine.setProperty('voice', voice.id)
+            break
+
+    engine.say(text)
+    engine.runAndWait()
 
 def submit_text():
-    text = entry.get()
-    print("Pregunta:", text)
-    entry.delete(0, tk.END)
-    answer = answer_query_with_context(text, df, document_embeddings)
-    answer_label.config(text=answer)
+    user_message = user_input.get("1.0", tk.END).strip()
+    if user_message:
+        print(translate("Pregunta:", LANGUAGE), user_message)
+        user_input.delete("1.0", tk.END)
+
+        chat_history.config(state=tk.NORMAL)
+        chat_history.insert(tk.END, f"You: {user_message}\n")
+        chat_history.see(tk.END)
+        chat_history.config(state=tk.DISABLED)
+
+        answer = answer_query_with_context(user_message, df, document_embeddings)
+
+        chat_history.config(state=tk.NORMAL)
+        chat_history.insert(tk.END, f"Bot: {answer}\n")
+        chat_history.see(tk.END)
+        chat_history.config(state=tk.DISABLED)
 
 
 def submit_voice():
     def recognize_voice():
         recognizer = sr.Recognizer()
         with sr.Microphone() as source:
-            print("Habla ahora...")
+            print(translate("Habla ahora...", LANGUAGE))
             audio = recognizer.listen(source)
         try:
-            voice_text = recognizer.recognize_google(audio, language="es-ES")
-            print("Pregunta por voz:", voice_text)
+            voice_text = recognizer.recognize_google(audio)
+            print(translate("Pregunta por voz:", LANGUAGE), voice_text)
             answer = answer_query_with_context(voice_text, df, document_embeddings)
             answer_label.config(text=answer)
         except sr.UnknownValueError:
-            print("No se entendió la pregunta.")
+            print(translate("No se entendió la pregunta.", LANGUAGE))
         except sr.RequestError as e:
-            print("Error al obtener resultados; {0}".format(e))
+            print(translate("Error al obtener resultados; {0}".format(e), LANGUAGE))
 
     voice_thread = threading.Thread(target=recognize_voice)
     voice_thread.start()
@@ -181,6 +207,8 @@ def get_df():
     df = list_to_dataframe(text)
     return df
 
+LANGUAGE = DEFAULT_LANGUAGE
+
 df = get_df()
 document_embeddings = get_embeddings()
 
@@ -190,17 +218,26 @@ app.title("Secreatria Digital")
 frame = tk.Frame(app)
 frame.pack(padx=10, pady=10)
 
-entry = tk.Entry(frame)
-entry.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+chat_history = tk.Text(frame, wrap=tk.WORD, height=20, width=50)
+chat_history.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-text_button = tk.Button(frame, text="Enviar texto", command=submit_text)
+scrollbar = tk.Scrollbar(frame, command=chat_history.yview)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+chat_history.config(yscrollcommand=scrollbar.set)
+chat_history.config(state=tk.DISABLED)
+
+input_frame = tk.Frame(app)
+input_frame.pack(padx=10, pady=10)
+
+user_input = tk.Text(input_frame, wrap=tk.WORD, height=2, width=40)
+user_input.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+text_button = tk.Button(input_frame, text=translate("Enviar texto", LANGUAGE), command=submit_text)
 text_button.pack(side=tk.LEFT, padx=(5, 0))
 
-voice_button = tk.Button(frame, text="Enviar voz", command=submit_voice)
+voice_button = tk.Button(input_frame, text=translate("Enviar voz", LANGUAGE), command=submit_voice)
 voice_button.pack(side=tk.LEFT, padx=(5, 0))
-
-answer_label = tk.Label(app, text="", wraplength=300)
-answer_label.pack(padx=10, pady=(10, 0))
 
 
 def main():
