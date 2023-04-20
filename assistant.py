@@ -1,7 +1,6 @@
 import os
 import argparse
 from typing import Dict, List, Tuple
-import tkinter as tk
 import threading
 
 import numpy as np
@@ -19,28 +18,7 @@ CONFIG_FILE = 'config.py'
 EMBEDDINGS_FILE ='data/embeddings_ada-002.csv'
 
 DEFAULT_LANGUAGE = 'es'
-'''
-# Check if config file exists
-if os.path.exists(CONFIG_FILE):
-    # If it does, import API key from config file
-    from config import API_KEY
-else:
-    # If it doesn't, prompt user for API key and create config file
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--api_key', help='API key for accessing the service')
-    args = parser.parse_args()
 
-    if args.api_key:
-        # User provided API key as a command-line argument
-        API_KEY = args.api_key
-    else:
-        # User didn't provide API key, prompt for input
-        API_KEY = input('Please enter your API key: ')
-
-    # Write API key to config file
-    with open(CONFIG_FILE, 'w') as f:
-        f.write(f'API_KEY = "{API_KEY}"\n')
-'''
 API_KEY = os.environ['API_KEY']
 openai.api_key =  API_KEY
 
@@ -159,51 +137,6 @@ def speak(text: str):
 
     engine.say(text)
     engine.runAndWait()
-
-def submit_text():
-    user_message = user_input.get("1.0", tk.END).strip()
-    if user_message:
-        print(translate("Pregunta:", LANGUAGE), user_message)
-        user_input.delete("1.0", tk.END)
-
-        chat_history.config(state=tk.NORMAL)
-        chat_history.insert(tk.END, f"You: {user_message}\n")
-        chat_history.see(tk.END)
-        chat_history.config(state=tk.DISABLED)
-
-        answer = answer_query_with_context(user_message, df, document_embeddings)
-
-        chat_history.config(state=tk.NORMAL)
-        chat_history.insert(tk.END, f"Bot: {answer}\n")
-        chat_history.see(tk.END)
-        chat_history.config(state=tk.DISABLED)
-
-
-def submit_voice():
-    def recognize_voice():
-        recognizer = sr.Recognizer()
-        with sr.Microphone() as source:
-            print(translate("Habla ahora...", LANGUAGE))
-            audio = recognizer.listen(source)
-        try:
-            voice_text = recognizer.recognize_google(audio)
-            print(translate("Pregunta por voz:", LANGUAGE), voice_text)
-
-            answer = answer_query_with_context(voice_text, df, document_embeddings)
-
-            chat_history.config(state=tk.NORMAL)
-            chat_history.insert(tk.END, f"Bot: {answer}\n")
-            chat_history.see(tk.END)
-            chat_history.config(state=tk.DISABLED)
-
-        except sr.UnknownValueError:
-            print(translate("No se entendió la pregunta.", LANGUAGE))
-        except sr.RequestError as e:
-            print(translate("Error al obtener resultados; {0}".format(e), LANGUAGE))
-
-    voice_thread = threading.Thread(target=recognize_voice)
-    voice_thread.start()
-
 
 def get_embeddings():
     df_embeddings = pd.read_csv(EMBEDDINGS_FILE, header=0, sep="%").T
