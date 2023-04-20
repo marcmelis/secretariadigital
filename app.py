@@ -1,16 +1,7 @@
-import os
-import pandas as pd
-import numpy as np
-import openai
 from flask import Flask, request, jsonify
-from typing import Dict, List, Tuple
 
 # Import your existing functions and variables
 from assistant import (
-    CONFIG_FILE, EMBEDDINGS_FILE, DEFAULT_LANGUAGE, API_KEY, COMPLETIONS_MODEL,
-    COMPLETIONS_API_PARAMS, MAX_SECTION_LEN, SEPARATOR, tokenizer, separator_len,
-    get_query_embedding, order_document_sections_by_query_similarity,
-    construct_prompt, generate_chat_completion_message_from_prompt,
     answer_query_with_context, get_embeddings, get_df
 )
 
