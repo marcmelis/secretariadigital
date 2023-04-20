@@ -4,7 +4,7 @@ import openai
 import pandas as pd
 
 from data import get_text, list_to_dataframe
-from assitant import API_KEY
+from assistant import API_KEY
 
 openai.api_key =  API_KEY
 
