@@ -9,3 +9,5 @@ SpeechRecognition==3.10.0
 textblob==0.17.1
 tiktoken==0.3.3
 transformers==4.27.4
+gunicorn
+
