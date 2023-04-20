@@ -4,9 +4,10 @@ import openai
 import pandas as pd
 
 from data import get_text, list_to_dataframe
-from config import API_KEY
+from assitant import API_KEY
 
-openai.api_key = API_KEY
+openai.api_key =  API_KEY
+
 
 MODEL_NAME= "ada-002"
 DOC_EMBEDDINGS_MODEL=f"text-embedding-{MODEL_NAME}"

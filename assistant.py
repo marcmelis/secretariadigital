@@ -19,7 +19,7 @@ CONFIG_FILE = 'config.py'
 EMBEDDINGS_FILE ='data/embeddings_ada-002.csv'
 
 DEFAULT_LANGUAGE = 'es'
-
+'''
 # Check if config file exists
 if os.path.exists(CONFIG_FILE):
     # If it does, import API key from config file
@@ -40,8 +40,10 @@ else:
     # Write API key to config file
     with open(CONFIG_FILE, 'w') as f:
         f.write(f'API_KEY = "{API_KEY}"\n')
+'''
+API_KEY = os.environ['API_KEY']
+openai.api_key =  API_KEY
 
-openai.api_key = API_KEY
 
 COMPLETIONS_MODEL = "gpt-3.5-turbo"
 
