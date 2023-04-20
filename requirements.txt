@@ -1,8 +1,11 @@
+Flask==2.2.3
+googletrans==3.1.0a0
 inflect==6.0.2
 numpy==1.24.2
 openai==0.27.2
 pandas==2.0.0
 pyttsx3==2.90
 SpeechRecognition==3.10.0
+textblob==0.17.1
 tiktoken==0.3.3
 transformers==4.27.4

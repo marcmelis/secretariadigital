@@ -1,3 +1,9 @@
 {
-    "Hello, world!": "¡Hola Mundo!"
+    "Hello, world!": "¡Hola Mundo!",
+    "Enviar texto": "Enviar texto",
+    "Enviar voz": "Enviar voz",
+    "Habla ahora...": "Habla ahora...",
+    "Pregunta por voz:": "Pregunta por voz:",
+    "Error al obtener resultados; recognition connection failed: [Errno 32] Broken pipe": "Error al obtener resultados; recognition connection failed: [errno 32] broken pipe",
+    "Pregunta:": "Pregunta:"
 }

@@ -18,7 +18,7 @@ from generate_embeddings import get_query_embedding
 CONFIG_FILE = 'config.py'
 EMBEDDINGS_FILE ='data/embeddings_ada-002.csv'
 
-DEFAULT_LANGUAGE = 'en'
+DEFAULT_LANGUAGE = 'es'
 
 # Check if config file exists
 if os.path.exists(CONFIG_FILE):
@@ -186,8 +186,14 @@ def submit_voice():
         try:
             voice_text = recognizer.recognize_google(audio)
             print(translate("Pregunta por voz:", LANGUAGE), voice_text)
+
             answer = answer_query_with_context(voice_text, df, document_embeddings)
-            answer_label.config(text=answer)
+
+            chat_history.config(state=tk.NORMAL)
+            chat_history.insert(tk.END, f"Bot: {answer}\n")
+            chat_history.see(tk.END)
+            chat_history.config(state=tk.DISABLED)
+
         except sr.UnknownValueError:
             print(translate("No se entendió la pregunta.", LANGUAGE))
         except sr.RequestError as e:
@@ -211,34 +217,6 @@ LANGUAGE = DEFAULT_LANGUAGE
 
 df = get_df()
 document_embeddings = get_embeddings()
-
-app = tk.Tk()
-app.title("Secreatria Digital")
-
-frame = tk.Frame(app)
-frame.pack(padx=10, pady=10)
-
-chat_history = tk.Text(frame, wrap=tk.WORD, height=20, width=50)
-chat_history.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-scrollbar = tk.Scrollbar(frame, command=chat_history.yview)
-scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-
-chat_history.config(yscrollcommand=scrollbar.set)
-chat_history.config(state=tk.DISABLED)
-
-input_frame = tk.Frame(app)
-input_frame.pack(padx=10, pady=10)
-
-user_input = tk.Text(input_frame, wrap=tk.WORD, height=2, width=40)
-user_input.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-text_button = tk.Button(input_frame, text=translate("Enviar texto", LANGUAGE), command=submit_text)
-text_button.pack(side=tk.LEFT, padx=(5, 0))
-
-voice_button = tk.Button(input_frame, text=translate("Enviar voz", LANGUAGE), command=submit_voice)
-voice_button.pack(side=tk.LEFT, padx=(5, 0))
-
 
 def main():
     app.mainloop()
