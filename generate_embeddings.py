@@ -1,11 +1,12 @@
+import os
 from typing import Dict, List, Tuple
 
 import openai
 import pandas as pd
 
 from data import get_text, list_to_dataframe
-from assistant import API_KEY
 
+API_KEY = os.environ['API_KEY']
 openai.api_key =  API_KEY
 
 
