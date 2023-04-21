@@ -1,14 +1,10 @@
 import os
-import argparse
 from typing import Dict, List, Tuple
-import threading
 
 import numpy as np
 import openai
 import pandas as pd
 from transformers import GPT2TokenizerFast
-import speech_recognition as sr
-import pyttsx3
 
 from data import get_text, list_to_dataframe
 from generate_embeddings import get_query_embedding
