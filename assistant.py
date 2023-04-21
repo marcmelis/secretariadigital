@@ -37,7 +37,7 @@ COMPLETIONS_API_PARAMS = {
 }
 
 # Maximum length of the context provided, the more context, the more accurate answers
-MAX_SECTION_LEN = 500
+MAX_SECTION_LEN = 1000
 SEPARATOR = "\n* "
 
 tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
@@ -141,3 +141,11 @@ LANGUAGE = DEFAULT_LANGUAGE
 
 df = get_df()
 document_embeddings = get_embeddings()
+
+def main():
+    user_message = input("Write your question: \n")
+    answer = answer_query_with_context(user_message, df, document_embeddings)
+    print(answer)
+
+if __name__ == "__main__":
+    main()
