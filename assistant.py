@@ -10,7 +10,6 @@ from transformers import GPT2TokenizerFast
 import speech_recognition as sr
 import pyttsx3
 
-from translator import translate, detect_language
 from data import get_text, list_to_dataframe
 from generate_embeddings import get_query_embedding
 from api_key import API_KEY
