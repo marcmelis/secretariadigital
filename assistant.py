@@ -13,13 +13,13 @@ import pyttsx3
 from translator import translate, detect_language
 from data import get_text, list_to_dataframe
 from generate_embeddings import get_query_embedding
+from api_key import API_KEY
 
 CONFIG_FILE = 'config.py'
 EMBEDDINGS_FILE ='data/embeddings_ada-002.csv'
 
 DEFAULT_LANGUAGE = 'es'
 
-API_KEY = os.environ['API_KEY']
 openai.api_key =  API_KEY
 
 
@@ -126,17 +126,6 @@ def answer_query_with_context(
 
     return response["choices"][0]["message"]["content"].strip(" \n")
 
-def speak(text: str):
-    language = detect_language(text)
-    engine = pyttsx3.init()
-    voices = engine.getProperty('voices')
-    for voice in voices:
-        if language in voice.languages:
-            engine.setProperty('voice', voice.id)
-            break
-
-    engine.say(text)
-    engine.runAndWait()
 
 def get_embeddings():
     df_embeddings = pd.read_csv(EMBEDDINGS_FILE, header=0, sep="%").T
@@ -152,10 +141,3 @@ LANGUAGE = DEFAULT_LANGUAGE
 
 df = get_df()
 document_embeddings = get_embeddings()
-
-def main():
-    app.mainloop()
-
-
-if __name__ == "__main__":
-    main()
