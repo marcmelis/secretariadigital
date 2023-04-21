@@ -86,6 +86,33 @@ curl -X POST -H "Content-Type: application/json" -d '{"user_message":"Your quest
 
 Replace `"Your question here"` with your actual question.
 
+## Generate Embeddings
+
+The script `generate_embeddings.py` is used to generate embeddings for the document sections. These embeddings are used by the Assistant API to answer queries more efficiently.
+
+To generate embeddings for your documents, follow these steps:
+
+1. Make sure you have set up your API key as an environment variable or in the `config.py` file, as described in the Installation section.
+
+2. Run the `generate_embeddings.py` script:
+
+```bash
+python generate_embeddings.py
+```
+
+This script reads the input text from a .csv file, generates embeddings for each section, and writes the embeddings to another .csv file. If the embeddings file already exists, the script will only generate embeddings for new sections added to the input .csv file, without overwriting the existing embeddings.
+
+The script will output the number of new embeddings generated and the total number of embeddings after the update.
+
+Example output:
+
+```
+Writing 750 new embeddings. Current embeddings: 1000
+```
+
+This indicates that 750 new embeddings were generated, and the total number of embeddings is now 1000.
+
+
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
