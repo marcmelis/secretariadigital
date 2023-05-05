@@ -13,8 +13,6 @@ from api_key import API_KEY
 CONFIG_FILE = 'config.py'
 EMBEDDINGS_FILE ='data/embeddings_ada-002.csv'
 
-DEFAULT_LANGUAGE = 'es'
-
 openai.api_key =  API_KEY
 
 
@@ -82,12 +80,11 @@ def construct_prompt(question: str, context_embeddings: dict, df: pd.DataFrame) 
         chosen_sections.append(SEPARATOR + document_section.content.replace("\n", " "))
         chosen_sections_indexes.append(str(section_index))
 
-    # Useful diagnostic information
-    # print(f"Selected {len(chosen_sections)} document sections:")
-    # print("\n".join(chosen_sections_indexes))
-
-    header = """Answer the question as truthfully as possible using the provided context, and if the answer is not contained within the text below, say "I don't know."\n\nContext:\n"""
-    header = ""
+    chatbot = """You are a chatbot assistant for the University of Lleida.\n"""
+    truthfully = """Answer the question as truthfully as possible using the provided context.\n"""
+    language = """Always respond in the language of the question provided after "Q: ".\n"""
+    context_header = "\n\nContext: \n"
+    header = chatbot + truthfully + language + context_header
     return header + "".join(chosen_sections) + "\n\n Q: " + question + "\n A:"
 
 def generate_chat_completion_message_from_prompt(prompt: str) -> List[Dict[str,str]]:
@@ -103,7 +100,7 @@ def answer_query_with_context(
     query: str,
     df: pd.DataFrame,
     document_embeddings: Dict[Tuple[str, str], np.array],
-    show_prompt: bool = False
+    show_prompt: bool = True
 ) -> str:
     prompt = construct_prompt(
         query,
@@ -131,8 +128,6 @@ def get_df():
     text = get_text()
     df = list_to_dataframe(text)
     return df
-
-LANGUAGE = DEFAULT_LANGUAGE
 
 df = get_df()
 document_embeddings = get_embeddings()
